@@ -1,0 +1,23 @@
+# Ignorar arquivos de configuração do Visual Studio
+.vs/
+*.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.ide
+*.sln.cache
+
+# Ignorar binários e builds
+bin/
+obj/
+*.dll
+*.exe
+
+# Ignorar arquivos temporários
+*.log
+*.tmp
+
+# Ignorar arquivos do sistema operacional
+Thumbs.db
+.DS_Store

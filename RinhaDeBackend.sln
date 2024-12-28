@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35521.163 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RinhaDeBackend", "RinhaDeBackend\RinhaDeBackend.csproj", "{756D15B9-6832-4DD3-9A18-708A4BD867EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RinhaDeBackend.Tests", "RinhaDeBackend.Tests\RinhaDeBackend.Tests.csproj", "{A243D1A0-341C-4C14-BC20-DA5261DD378E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{756D15B9-6832-4DD3-9A18-708A4BD867EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{756D15B9-6832-4DD3-9A18-708A4BD867EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{756D15B9-6832-4DD3-9A18-708A4BD867EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{756D15B9-6832-4DD3-9A18-708A4BD867EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A243D1A0-341C-4C14-BC20-DA5261DD378E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A243D1A0-341C-4C14-BC20-DA5261DD378E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A243D1A0-341C-4C14-BC20-DA5261DD378E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A243D1A0-341C-4C14-BC20-DA5261DD378E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
