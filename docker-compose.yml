@@ -1,0 +1,67 @@
+
+services:
+  migrations:
+    build:
+      context: ./RinhaDeBackend # Aponta para a pasta do projeto
+      dockerfile: Dockerfile # Usa o Dockerfile dentro da pasta RinhaDeBackend
+      target: migrations # Usa o estágio "migrations" no Dockerfile
+    container_name: migrations
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Database=api_db;Username=postgres;Password=postgres
+    depends_on:
+      - db
+    entrypoint: ["dotnet", "ef", "database", "update"]
+
+  api1:
+    build:
+      context: ./RinhaDeBackend # Aponta para a pasta do projeto
+      dockerfile: Dockerfile # Usa o Dockerfile dentro da pasta RinhaDeBackend
+      target: runtime # Usa o estágio "runtime" no Dockerfile
+    container_name: api1
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Database=api_db;Username=postgres;Password=postgres
+    depends_on:
+      - db
+    ports:
+      - "5001:80"
+
+  api2:
+    build:
+      context: ./RinhaDeBackend # Aponta para a pasta do projeto
+      dockerfile: Dockerfile # Usa o Dockerfile dentro da pasta RinhaDeBackend
+      target: runtime # Usa o estágio "runtime" no Dockerfile
+    container_name: api2
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Database=api_db;Username=postgres;Password=postgres
+    depends_on:
+      - db
+    ports:
+      - "5002:80"
+
+  db:
+    image: postgres:15
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: api_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "9999:9999"
+    depends_on:
+      - api1
+      - api2
+    volumes:
+      - ./RinhaDeBackend/nginx.conf:/etc/nginx/nginx.conf:ro  
+
+volumes:
+  pgdata:
