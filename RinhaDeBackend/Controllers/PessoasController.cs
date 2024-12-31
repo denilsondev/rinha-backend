@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RinhaDeBackend.Entities;
-using RinhaDeBackend.Services;
+using RinhaDeBackend.API.Model;
+using RinhaDeBackend.Application.Services;
+using RinhaDeBackend.Domain.Entities;
 
 namespace RinhaDeBackend.Controllers
 {
@@ -8,11 +9,11 @@ namespace RinhaDeBackend.Controllers
     public class PessoasController  : ControllerBase
     {
 
-        private readonly IPessoaService _service;
+        private readonly IPessoaService _pessoaService;
 
         public PessoasController(IPessoaService service)
         {
-            _service = service;
+            _pessoaService = service;
             
         }
 
@@ -20,7 +21,7 @@ namespace RinhaDeBackend.Controllers
         [Route("pessoas/{id:guid}")]
         public async Task<IActionResult> GetPessoa(Guid id)
         {
-            var pessoa = await _service.GetByIdAsync(id);
+            var pessoa = await _pessoaService.ObterPessoaPorId(id);
             if (pessoa == null)
                 return NotFound();
 
@@ -36,51 +37,41 @@ namespace RinhaDeBackend.Controllers
             if (string.IsNullOrEmpty(t))
                 return BadRequest("O termo de busca (t) é obrigatório.");
 
-            var pessoas = await _service.SearchAsync(t);
+            var pessoas = await _pessoaService.BuscarPessoas(t);
             return Ok(pessoas);
         }
 
         [HttpPost]
         [Route("pessoas")]
-        public async Task<IActionResult> AddPessoa([FromBody] Pessoa pessoa)
+        public async Task<IActionResult> AddPessoa([FromBody] PessoaInputModel pessoa)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // Validação adicional para Stack
-            if (pessoa.Stack == null || !pessoa.Stack.Any())
-            {
-                return BadRequest(new { error = "O campo 'Stack' é obrigatório e não pode ser vazio." });
-            }
-
-
-            if (pessoa.Stack != null && pessoa.Stack.Any(s => s.Length > 32))
-            {
-                return BadRequest(new { error = "Cada item do Stack deve ter no máximo 32 caracteres." });
-            }
-
-
             try
             {
-                var novaPessoa = await _service.AddAsync(pessoa);
+                var id = await _pessoaService.CriarPessoaAsync(
+                    pessoa.Apelido,
+                    pessoa.Nome,
+                    pessoa.Nascimento,
+                    pessoa.Stack
+                );
 
-                return CreatedAtAction(nameof(GetPessoa), new { id = novaPessoa.Id }, novaPessoa);
-
+                return CreatedAtAction(nameof(GetPessoa), new { id }, null);
             }
             catch (Exception ex)
             {
-                return UnprocessableEntity(new { error = ex.Message });
+                return BadRequest(new { Message = ex.Message });
             }
-            
         }
 
         [HttpGet]
         [Route("contagem-pessoas")]
         public async Task<IActionResult> GetTotalCount()
         {
-            var totalCount = await _service.GetTotalCountAsync();
+            var totalCount = await _pessoaService.ContarPessoaAsync();
 
             return Ok(totalCount.ToString());
 

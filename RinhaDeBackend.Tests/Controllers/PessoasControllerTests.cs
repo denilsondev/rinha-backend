@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using RinhaDeBackend.API.Model;
+using RinhaDeBackend.Application.Services;
 using RinhaDeBackend.Controllers;
-using RinhaDeBackend.Entities;
-using RinhaDeBackend.Services;
+using RinhaDeBackend.Domain.Entities;
 using Xunit;
 
 namespace RinhaDeBackend.Tests.Controllers
@@ -29,34 +28,27 @@ namespace RinhaDeBackend.Tests.Controllers
         [Fact]
         public async Task AddPessoa_ShouldReturn201_WhenRequestIsValid()
         {
-            var novaPessoa = new Pessoa
-            {
+            var IdPessoa = Guid.NewGuid();
+            var novaPessoa = new PessoaInputModel
+            { 
                 Apelido = "jose",
                 Nome = "José da Silva",
                 Nascimento = DateTime.Parse("2000-10-01"),
                 Stack = new List<string> { "C#", "Node" }
             };
 
-            _serviceMock.Setup(s => s.AddAsync(It.IsAny<Pessoa>()))
-                .ReturnsAsync(new Pessoa
-                {
-                    Id = Guid.NewGuid(),
-                    Apelido = novaPessoa.Apelido,
-                    Nome = novaPessoa.Nome,
-                    Nascimento = novaPessoa.Nascimento,
-                    Stack = novaPessoa.Stack
-                });
+            _serviceMock.Setup(s => s.CriarPessoaAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<List<string>>()))
+                .ReturnsAsync(IdPessoa);
 
             var result = await _controller.AddPessoa(novaPessoa) as CreatedAtActionResult;
 
             result.StatusCode.Should().Be(201);
-            result.Value.Should().BeEquivalentTo(novaPessoa, options => options.Excluding(p => p.Id));
         }
 
         [Fact]
         public async Task AddPessoa_ShouldReturn422_WhenApelidoAlreadyExists()
         {
-            var novaPessoa = new Pessoa
+            var novaPessoa = new PessoaInputModel
             {
                 Apelido = "jose",
                 Nome = "José da Silva",
@@ -64,7 +56,7 @@ namespace RinhaDeBackend.Tests.Controllers
                 Stack = new List<string> { "C#", "Node" }
             };
 
-            _serviceMock.Setup(s => s.AddAsync(It.IsAny<Pessoa>())).ThrowsAsync(new Exception("Apelido já está em uso."));
+            _serviceMock.Setup(s => s.CriarPessoaAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<List<string>>())).ThrowsAsync(new Exception("Apelido já está em uso."));
 
             var result = await _controller.AddPessoa(novaPessoa) as ObjectResult;
 
@@ -76,7 +68,7 @@ namespace RinhaDeBackend.Tests.Controllers
         [Fact]
         public async Task AddPessoa_ShouldReturn400_WhenRequestIsMalformed()
         {
-            var pessoaInvalida = new Pessoa
+            var pessoaInvalida = new PessoaInputModel
             {
                 Apelido = "jose",
                 Nome = "José da Silva",
@@ -93,7 +85,7 @@ namespace RinhaDeBackend.Tests.Controllers
         [Fact]
         public async Task AddPessoa_ShouldReturn400_WhenStackContainsInvalidValues()
         {
-            var pessoaComStackInvalido = new Pessoa
+            var pessoaComStackInvalido = new PessoaInputModel
             {
                 Apelido = "josé",
                 Nome = "José Roberto",

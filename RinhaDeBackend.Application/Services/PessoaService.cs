@@ -4,7 +4,7 @@ using RinhaDeBackend.Domain.ValueObjects;
 
 namespace RinhaDeBackend.Application.Services
 {
-    public class PessoaService
+    public class PessoaService : IPessoaService
     {
         private readonly IPessoaRepository _pessoaRepository;
 

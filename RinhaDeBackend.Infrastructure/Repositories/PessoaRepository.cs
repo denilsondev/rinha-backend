@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RinhaDeBackend.Data;
-using RinhaDeBackend.Entities;
+using RinhaDeBackend.Domain.Entities;
+using RinhaDeBackend.Domain.Repositories;
+using RinhaDeBackend.Infrastructure.Data;
 
-namespace RinhaDeBackend.Repositories
+namespace RinhaDeBackend.Infrastructure.Repositories
 {
     public class PessoaRepository : IPessoaRepository
     {
@@ -12,11 +13,10 @@ namespace RinhaDeBackend.Repositories
             _context = context;
 
         }
-        public async Task<Pessoa> AddAsync(Pessoa pessoa)
+        public async Task AddAsync(Pessoa pessoa)
         {
-            _context.Pessoas.Add(pessoa);
+            await _context.Pessoas.AddAsync(pessoa);
             await _context.SaveChangesAsync();
-            return pessoa;
         }
 
         public async Task<bool> ExistsByApelidoAsunc(string apelido)
@@ -36,16 +36,12 @@ namespace RinhaDeBackend.Repositories
 
         public async Task<IEnumerable<Pessoa>> SearchAsync(string termo)
         {
-            return await _context.Pessoas.
-                Where(p =>
-                (!string.IsNullOrEmpty(p.Apelido) && EF.Functions.ILike(p.Apelido, $"%{termo}%")) ||
-                (!string.IsNullOrEmpty(p.Nome) && EF.Functions.ILike(p.Nome, $"%{termo}%")) ||
-                (p.Stack != null && p.Stack.Any(stack => EF.Functions.ILike(stack, $"%{termo}%")))
-                )
-                .Take(50)
-                .ToListAsync();
+            return await _context.Pessoas
+                                 .Where(p => p.Apelido.Contains(termo) || p.Nome.Contains(termo) || p.Stack.Any(p => p.Nome.Contains(termo)))
+                                 .Include(p => p.Stack)
+                                 .ToListAsync();
         }
 
-        
+
     }
 }
