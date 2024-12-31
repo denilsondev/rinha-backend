@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using RinhaDeBackend.Entities;
+﻿using RinhaDeBackend.Domain.Entities;
 
-namespace RinhaDeBackend.Repositories
+namespace RinhaDeBackend.Domain.Repositories
 {
     public interface IPessoaRepository
     {

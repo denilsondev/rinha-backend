@@ -15,7 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\RinhaDeBackend\RinhaDeBackend.csproj" />
+		<ProjectReference Include="..\RinhaDeBackend\RinhaDeBackend.API.csproj" />
 	</ItemGroup>
 
 </Project>
