@@ -2,9 +2,9 @@
 services:
   migrations:
     build:
-      context: ./RinhaDeBackend # Aponta para a pasta do projeto
-      dockerfile: Dockerfile # Usa o Dockerfile dentro da pasta RinhaDeBackend
-      target: migrations # Usa o estágio "migrations" no Dockerfile
+      context: . # Aponta para o diretório raiz do projeto
+      dockerfile: ./Dockerfile # Dockerfile na subpasta
+      target: migrations
     container_name: migrations
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
@@ -15,8 +15,8 @@ services:
 
   api1:
     build:
-      context: ./RinhaDeBackend # Aponta para a pasta do projeto
-      dockerfile: Dockerfile # Usa o Dockerfile dentro da pasta RinhaDeBackend
+      context: . # Aponta para o diretório raiz do projeto
+      dockerfile: ./Dockerfile # Dockerfile na subpasta
       target: runtime # Usa o estágio "runtime" no Dockerfile
     container_name: api1
     environment:
@@ -29,8 +29,8 @@ services:
 
   api2:
     build:
-      context: ./RinhaDeBackend # Aponta para a pasta do projeto
-      dockerfile: Dockerfile # Usa o Dockerfile dentro da pasta RinhaDeBackend
+      context: . # Aponta para o diretório raiz do projeto
+      dockerfile: ./Dockerfile # Dockerfile na subpasta
       target: runtime # Usa o estágio "runtime" no Dockerfile
     container_name: api2
     environment:

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RinhaDeBackend.Domain.Entities;
 using RinhaDeBackend.Domain.ValueObjects;
-using RinhaDeBackend.Entities;
 using Xunit;
 
 namespace RinhaDeBackend.Tests.Domain
@@ -67,4 +65,4 @@ namespace RinhaDeBackend.Tests.Domain
         }
     }
 }
-}
+

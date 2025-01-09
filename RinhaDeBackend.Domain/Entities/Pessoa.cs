@@ -24,6 +24,13 @@ namespace RinhaDeBackend.Domain.Entities
             Stack = stack ?? throw new ArgumentException("Stack é obrigatório.");
         }
 
+        // Construtor sem parâmetros necessário para o EF Core
+        // Esse construtor não deve ser acessado diretamente fora do EF Core
+        protected Pessoa()
+        {
+            Stack = new List<Stack>(); // Inicializando a lista para evitar null
+        }
+
 
         public void AddStack(Stack novaStack)
         {

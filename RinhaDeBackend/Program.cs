@@ -34,7 +34,9 @@ internal class Program
         }
         );
 
-        builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
 
         builder.Services.AddScoped<IPessoaRepository, PessoaRepository>();
@@ -54,12 +56,12 @@ internal class Program
             });
         }
 
-        //app.UseHttpsRedirection();
+        app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
         app.MapControllers();
 
-        app.Run("http://0.0.0.0:80");
+        app.Run();
     }
 }
