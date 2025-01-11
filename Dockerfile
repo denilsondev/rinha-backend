@@ -1,6 +1,6 @@
 # Etapa de Build
 FROM mcr.microsoft.com/dotnet/nightly/sdk:9.0 AS build
-WORKDIR /app
+WORKDIR /src
 
 # Copiar apenas os arquivos necessários para restaurar dependências
 COPY RinhaDeBackend.sln ./
@@ -22,13 +22,13 @@ RUN dotnet publish RinhaDeBackend/RinhaDeBackend.API.csproj -c Release -o /out
 # Etapa de Runtime
 FROM mcr.microsoft.com/dotnet/nightly/aspnet:9.0 AS runtime
 WORKDIR /app
-COPY --from=build /out ./
+COPY --from=build /out .
 ENTRYPOINT ["dotnet", "RinhaDeBackend.API.dll"]
 
 # Etapa de Migrations
 FROM mcr.microsoft.com/dotnet/nightly/sdk:9.0 AS migrations
-WORKDIR /app
-COPY --from=build /out ./
+WORKDIR /src
+COPY --from=build /src .
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
 ENTRYPOINT ["dotnet", "ef"]
